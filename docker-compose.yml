@@ -1,0 +1,28 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: contact-manager-db
+    restart: always
+    environment:
+      POSTGRES_USER: contactUser
+      POSTGRES_PASSWORD: contactPassword
+      POSTGRES_DB: contacts_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  app:
+    build: .
+    container_name: contacts-app
+    ports:
+      - "3000:3000"
+    depends_on:
+      - postgres
+    environment:
+      DATABASE_URL: postgresql://contactUser:contactPassword@postgres:5432/contacts_db
+
+volumes:
+  postgres_data:
