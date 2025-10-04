@@ -13,6 +13,9 @@ COPY package*.json ./
 # Instalamos todas las dependencias del proyecto
 RUN npm install
 
+# Copiamos también la carpeta prisma con schema.prisma
+COPY prisma ./prisma
+
 # Copiamos el resto de los archivos del proyecto al contenedor
 # Incluye: src/, public/, next.config.js, etc.
 COPY . .
@@ -44,6 +47,9 @@ COPY --from=builder /app/public ./public
 # src: código fuente del proyecto
 # Importante si usas Server Components, rutas dinámicas o Prisma
 COPY --from=builder /app/src ./src
+
+# prisma: necesario para ejecutar migraciones o generar cliente
+COPY --from=builder /app/prisma ./prisma
 
 # Definimos el entorno como producción para optimizar Next.js
 ENV NODE_ENV=production
