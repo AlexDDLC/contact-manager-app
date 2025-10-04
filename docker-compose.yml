@@ -9,8 +9,11 @@ services:
       POSTGRES_USER: contactUser
       POSTGRES_PASSWORD: contactPassword
       POSTGRES_DB: contacts_db
+    # If you have Postgres installed on your local machine, you must assign ports 
+    # 5431:5432 to connect to the Postgres instance from PgAdmin on your local machine 
+    # to the Postgres instance in the container using port 5431.
     ports:
-      - "5432:5432"
+      - "5431:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
@@ -22,7 +25,8 @@ services:
     depends_on:
       - postgres
     environment:
-      DATABASE_URL: postgresql://contactUser:contactPassword@postgres:5432/contacts_db
+      # Include schema=public to avoid error when execute migration 
+      DATABASE_URL: postgresql://contactUser:contactPassword@postgres:5432/contacts_db?schema=public
 
 volumes:
   postgres_data:
