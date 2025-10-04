@@ -43,5 +43,6 @@ next-env.d.ts
 #vscode settings
 .vscode
 
-# Prisma schema folder
+# Prisma folders
+/prisma
 /src/generated/prisma
