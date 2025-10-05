@@ -8,34 +8,35 @@ import { signIn } from 'next-auth/react';
 import { FaRegEyeSlash, FaRegEye } from "react-icons/fa";
 
 export default function LoginPage() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const { register, handleSubmit, formState: { errors } } = useForm();
+
+  const onSubmit = handleSubmit(async (data) => {
     setError('');
+    setIsLoading(true);
 
     try {
-      const res = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
+      const request = await signIn('credentials', {
+        email: data.email,
+        password: data.password,
+        redirect: false
       });
 
-      if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.message || 'Error de autenticación');
+      if (request?.error) {
+        setError(request.error);
+      } else {
+        router.push('/dashboard');
       }
-
-      const { token } = await res.json();
-      Cookies.set('token', token, { expires: 1 / 24 }); // Expira en 1 hora
-      router.push('/dashboard');
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err) {
+      setError('Ocurrió un error inesperado');
+    } finally {
+      setIsLoading(false);
     }
-  };
+  })
 
   return (
     <main className='bg-gray-50'>
