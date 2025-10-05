@@ -20,14 +20,14 @@ const authOptions = {
                     where: { email: credentials?.email }
                 })
 
-                if (!userExists) throw new Error('Error en el Usuario o Contraseña')
+                if (!userExists) throw new Error('Usuario o Contraseña incorrecto')
 
                 const passwordMatch = await bcrypt.compare(
                     credentials.password,
                     userExists.password
                 )
 
-                if (!passwordMatch) throw new Error('Error en el Usuario o Contraseña')
+                if (!passwordMatch) throw new Error('Usuario o Contraseña incorrecto')
 
                 return {
                     id: userExists.id.toString(),
