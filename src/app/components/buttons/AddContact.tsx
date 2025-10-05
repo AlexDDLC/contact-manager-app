@@ -14,7 +14,7 @@ export default function AddContact() {
     const closeModal = () => setIsOpen(false)
     const router = useRouter()
 
-    const { register, handleSubmit, formState: { errors } } = useForm();
+    const { register, handleSubmit, formState: { errors }, reset } = useForm();
 
     const onSubmit = handleSubmit(async (data) => {
         setError('');
@@ -30,6 +30,7 @@ export default function AddContact() {
         console.log(result);
 
         if (result.success) {
+            reset()
             setIsLoading(false)
             closeModal()
             router.refresh()
