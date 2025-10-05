@@ -1,5 +1,5 @@
 // app/api/contacts/route.ts
-import { prisma } from '@/libs/prisma';
+import { prisma } from '@/lib/prisma';
 import { NextResponse } from 'next/server';
 
 // GET: Obtener todos los contactos
