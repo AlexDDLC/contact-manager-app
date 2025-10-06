@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useRouter } from 'next/navigation';
-import { PUT_Contact } from '@/app/api/auth/contacts/route'
 import { FaUserEdit } from 'react-icons/fa'
 
 export default function EditContact({ contact }: { contact: any }) {
@@ -43,15 +42,26 @@ export default function EditContact({ contact }: { contact: any }) {
         formData.append('email', data.email);
         formData.append('phone', data.phone);
 
-        const result = await PUT_Contact(formData);
+        try {
+            const response = await fetch('http://localhost:3000/api/contacts', {
+                method: 'PUT',
+                body: formData,
+            })
 
-        if (result.success) {
-            setIsLoading(false);
-            closeModal();
-            router.refresh();
-        } else {
-            setIsLoading(false);
-            setError(result.error as string);
+            const result = await response.json()
+            console.log(result)
+
+            if (result.success) {
+                reset()
+                closeModal()
+                router.refresh()
+            } else {
+                setError(result.error as string)
+            }
+        } catch (err) {
+            setError('Ocurrió un error inesperado')
+        } finally {
+            setIsLoading(false)
         }
     });
 

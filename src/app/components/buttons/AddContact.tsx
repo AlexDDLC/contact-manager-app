@@ -4,7 +4,6 @@ import React, { useState } from 'react'
 import { IoMdPersonAdd } from 'react-icons/io'
 import { useForm } from 'react-hook-form'
 import { useRouter } from 'next/navigation';
-import { POST_Contact } from '@/app/api/auth/contacts/route'
 
 export default function AddContact() {
     const [isOpen, setIsOpen] = useState(false)
@@ -25,18 +24,26 @@ export default function AddContact() {
         formData.append('email', data.email)
         formData.append('phone', data.phone)
 
-        const result = await POST_Contact(formData)
+        try {
+            const response = await fetch('http://localhost:3000/api/contacts', {
+                method: 'POST',
+                body: formData,
+            })
 
-        console.log(result);
+            const result = await response.json()
+            console.log(result)
 
-        if (result.success) {
-            reset()
+            if (result.success) {
+                reset()
+                closeModal()
+                router.refresh()
+            } else {
+                setError(result.error as string)
+            }
+        } catch (err) {
+            setError('Ocurrió un error inesperado')
+        } finally {
             setIsLoading(false)
-            closeModal()
-            router.refresh()
-        } else {
-            setIsLoading(false)
-            setError(result.error as string)
         }
     })
 

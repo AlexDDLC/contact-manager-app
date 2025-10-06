@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { DELETE_Contact } from '@/app/api/auth/contacts/route'
 import { FaRegTrashCan } from 'react-icons/fa6'
 
 export default function DeleteContact({ contact }: { contact: any }) {
@@ -20,14 +19,25 @@ export default function DeleteContact({ contact }: { contact: any }) {
         const formData = new FormData()
         formData.append('id', contact.id)
 
-        const result = await DELETE_Contact(formData)
+        try {
+            const response = await fetch('http://localhost:3000/api/contacts', {
+                method: 'DELETE',
+                body: formData,
+            })
 
-        if (result.success) {
+            const result = await response.json()
+            console.log(result)
+
+            if (result.success) {
+                closeModal()
+                router.refresh()
+            } else {
+                setError(result.error as string)
+            }
+        } catch (err) {
+            setError('Ocurrió un error inesperado')
+        } finally {
             setIsLoading(false)
-            router.refresh()
-        } else {
-            setIsLoading(false)
-            setError(result.error as string)
         }
     }
 

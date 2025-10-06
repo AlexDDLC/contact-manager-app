@@ -1,12 +1,14 @@
 import React from 'react'
 import Image from 'next/image'
-import { GET_Contacts } from '../api/auth/contacts/route'
 import EditContact from './buttons/EditContact'
 import DeleteContact from './buttons/DeleteContact'
+import { GET } from '../api/contacts/route'
 
 export default async function ContactList() {
 
-    const contacts = await GET_Contacts()
+    const response = await GET()
+
+    const contacts = await response.json()
 
     return (
         <div className="flex flex-col">
@@ -37,7 +39,7 @@ export default async function ContactList() {
                             </thead>
                             <tbody className="bg-white divide-y divide-gray-200">
 
-                                {contacts && contacts.map((contact) => (
+                                {contacts && contacts.map((contact: any) => (
                                     <tr key={contact.id} className="hover:bg-gray-100">
                                         <td className="p-4 flex items-center whitespace-nowrap space-x-6 mr-12 lg:mr-0">
                                             <Image className="h-10 w-10 rounded-full" width={20} height={20}
