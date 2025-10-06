@@ -27,6 +27,6 @@ model Contact {
   name      String
   email     String   @unique
   phone     String?
-  createdAt DateTime @default(now())
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
   updatedAt DateTime @updatedAt
 }

@@ -52,7 +52,7 @@ export default async function ContactList() {
                                                 </div>
                                                 <div className="text-sm font-normal text-gray-500">
                                                     Última actualización { }
-                                                    {new Date(contact.updatedAt).toLocaleString()}
+                                                    {new Date(contact.updatedAt).toLocaleString('es-DO')}
                                                 </div>
 
                                             </div>
@@ -63,10 +63,10 @@ export default async function ContactList() {
                                         </td>
 
                                         <td className="p-4 whitespace-nowrap text-base font-medium text-gray-900">
-                                            {new Date(contact.createdAt).toLocaleString()}
+                                            {new Date(contact.createdAt).toLocaleString('es-DO')}
                                         </td>
 
-                                        <td className="p-4 whitespace-nowrap text-base font-normal text-gray-900">
+                                        <td className="p-4 whitespace-nowrap text-base font-medium text-gray-900">
                                             {contact.email}
                                         </td>
 
