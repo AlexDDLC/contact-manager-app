@@ -7,9 +7,14 @@ import { NextResponse } from 'next/server';
 const prisma = new PrismaClient()
 
 // GET: Obtener todos los contactos
-export async function GET() {
-  const contacts = await prisma.contact.findMany();
-  return NextResponse.json(contacts);
+export async function GET_Contacts() {
+  const contacts = await prisma.contact.findMany({
+    orderBy:{
+      name:'asc'
+    }
+  });
+
+  return contacts;
 }
 
 // POST: Crear un nuevo contacto
