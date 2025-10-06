@@ -4,6 +4,8 @@ services:
   postgres:
     image: postgres:15
     container_name: contact-manager-db
+    env_file:
+      - .env
     restart: always
     environment:
       POSTGRES_USER: contactUser
@@ -27,6 +29,8 @@ services:
     environment:
       # Include schema=public to avoid error when execute migration 
       DATABASE_URL: postgresql://contactUser:contactPassword@postgres:5432/contacts_db?schema=public
+      NEXTAUTH_URL: http://localhost:3000
+      NEXTAUTH_SECRET: la_mejor_clave_secreta_del_mundo_mundial_123
 
 volumes:
   postgres_data:

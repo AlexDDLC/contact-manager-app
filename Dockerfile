@@ -55,12 +55,17 @@ COPY --from=builder /app/src ./src
 # prisma: necesario para ejecutar migraciones o generar cliente
 COPY --from=builder /app/prisma ./prisma
 
+# Copiamos el script de arranque
+COPY entrypoint.sh ./entrypoint.sh
+
+# Damos permisos de ejecución
+RUN chmod +x ./entrypoint.sh
+
 # Definimos el entorno como producción para optimizar Next.js
 ENV NODE_ENV=production
 
 # Indicamos el puerto en el que la aplicación escuchará dentro del contenedor
 EXPOSE 3000
 
-# Comando que se ejecuta al iniciar el contenedor
-# Inicia la aplicación Next.js en modo producción
-CMD ["npm", "start"]
+# Usamos el script como punto de entrada (reemplaza el CMD anterior)
+CMD ["./entrypoint.sh"]

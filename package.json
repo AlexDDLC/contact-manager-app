@@ -3,12 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "npm run db:seed && next dev --turbopack",
+    "dev": "next dev --turbopack",
     "build": "next build --turbopack",
     "start": "next start",
     "lint": "eslint",
     "db:seed": "tsx prisma/seed.ts",
     "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate deploy",
     "postinstall": "prisma generate"
   },
   "dependencies": {
