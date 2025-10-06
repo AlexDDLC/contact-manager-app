@@ -6,23 +6,27 @@ FROM node:20-alpine AS builder
 # Todas las instrucciones posteriores se ejecutarán dentro de /app
 WORKDIR /app
 
-# Copiamos únicamente los archivos de dependencias
+# 1. Copiamos únicamente los archivos de dependencias
 # Esto permite que Docker cachee la instalación de dependencias si package.json no cambia
 COPY package*.json ./
 
-# Instalamos todas las dependencias del proyecto
-RUN npm install
-
-# Copiamos también la carpeta prisma con schema.prisma
+# 2. Copiamos la carpeta prisma con schema.prisma
+# ESTE PASO ES CRUCIAL. Debe ir ANTES de npm install para que 'prisma generate' tenga acceso al archivo.
 COPY prisma ./prisma
 
-# Copiamos el resto de los archivos del proyecto al contenedor
+# 3. Instalamos todas las dependencias del proyecto
+# Aquí se ejecuta 'prisma generate' (si está en postinstall) y ahora tiene el schema disponible.
+RUN npm install
+
+# 4. Copiamos el resto de los archivos del proyecto al contenedor
 # Incluye: src/, public/, next.config.js, etc.
 COPY . .
 
 # Ejecutamos el build de Next.js para producción
 # Esto genera la carpeta .next con los archivos optimizados para producción
 RUN npm run build
+
+# --- FASE DE PRODUCCIÓN (Más ligera y segura) ---
 
 # Usamos nuevamente Node.js Alpine para un contenedor limpio y ligero
 FROM node:20-alpine
