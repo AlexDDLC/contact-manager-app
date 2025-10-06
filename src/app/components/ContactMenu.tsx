@@ -1,7 +1,7 @@
 import React from 'react'
 import { FaSearch } from "react-icons/fa";
 import { FaRegTrashCan } from 'react-icons/fa6';
-import AddContact from './AddContact';
+import AddContact from './buttons/AddContact';
 
 export default function ContactMenu() {
     return (
