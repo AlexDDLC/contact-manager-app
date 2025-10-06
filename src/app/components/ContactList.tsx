@@ -71,7 +71,7 @@ export default async function ContactList() {
                                         <td className="whitespace-nowrap space-x-2">
                                             <EditContact contact={contact} />
 
-                                            <DeleteContact />
+                                            <DeleteContact contact={contact} />
                                         </td>
                                     </tr>
                                 ))}
