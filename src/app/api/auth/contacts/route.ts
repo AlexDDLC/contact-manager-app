@@ -18,13 +18,29 @@ export async function GET_Contacts() {
 }
 
 // POST: Crear un nuevo contacto
-export async function POST(request: Request) {
+export async function POST_Contact(formData: FormData) {
   try {
-    const data = await request.json();
+
+    const data = {
+      name: formData.get('name') as string,
+      email: formData.get('email') as string,
+      phone: formData.get('phone') as string,
+    }
+
+    const emailExist = await prisma.contact.findUnique({
+      where: {
+        email: data.email
+      }
+    })
+
+    if (emailExist) return { success: false, error: 'Ya existe un contacto con este correo' }
+
     const newContact = await prisma.contact.create({ data });
-    return NextResponse.json(newContact, { status: 201 });
+
+    return { success: true, data: newContact }
   } catch (error) {
-    return NextResponse.json({ message: 'Error al crear el contacto' }, { status: 500 });
+    console.log(error)
+    return { success: false, error: 'Error al crear contacto' }
   }
 }
 
