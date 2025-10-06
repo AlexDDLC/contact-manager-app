@@ -1,8 +1,10 @@
 'use server'
 
 // app/api/contacts/route.ts
-import { prisma } from '@/lib/prisma';
+import { PrismaClient } from '@/generated/prisma';
 import { NextResponse } from 'next/server';
+
+const prisma = new PrismaClient()
 
 // GET: Obtener todos los contactos
 export async function GET() {
