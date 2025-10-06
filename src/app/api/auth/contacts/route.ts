@@ -1,3 +1,5 @@
+'use server'
+
 // app/api/contacts/route.ts
 import { prisma } from '@/lib/prisma';
 import { NextResponse } from 'next/server';
