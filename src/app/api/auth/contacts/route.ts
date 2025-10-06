@@ -82,13 +82,29 @@ export async function PUT_Contact(formData: FormData) {
 }
 
 // DELETE: Eliminar un contacto
-export async function DELETE(request: Request, { params }: { params: { id: string } }) {
+export async function DELETE_Contact(formData: FormData) {
   try {
+    const id = formData.get('id') as string
+
+    if (!id) {
+      return { success: false, error: 'El ID del contacto es requerido' }
+    }
+
+    const existing = await prisma.contact.findUnique({
+      where: { id: parseInt(id) }
+    })
+
+    if (!existing) {
+      return { success: false, error: 'El contacto no existe' }
+    }
+
     await prisma.contact.delete({
-      where: { id: parseInt(params.id) },
-    });
-    return new NextResponse(null, { status: 204 });
+      where: { id: parseInt(id) },
+    })
+
+    return { success: true, message: 'Contacto eliminado correctamente' }
   } catch (error) {
-    return NextResponse.json({ message: 'Error al eliminar' }, { status: 500 });
+    console.error('Error al eliminar contacto:', error)
+    return { success: false, error: 'Error al eliminar contacto' }
   }
 }
