@@ -175,7 +175,10 @@ export default function EditContact({ contact }: { contact: any }) {
                                                     Guardando cambios...
                                                 </span>
                                             ) : (
-                                                'Guardar cambios'
+                                                <span className="flex items-center gap-2">
+                                                    <FaUserEdit size={18} />
+                                                    Editar contacto
+                                                </span>
                                             )}
                                         </button>
                                     </div>

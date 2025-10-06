@@ -161,7 +161,10 @@ export default function AddContact() {
                                                     Agregando contacto...
                                                 </span>
                                             ) : (
-                                                'Agregar contacto'
+                                                <span className="flex items-center gap-2">
+                                                    <IoMdPersonAdd size={18} />
+                                                    Agregar contacto
+                                                </span>
                                             )}
                                         </button>
                                     </div>
