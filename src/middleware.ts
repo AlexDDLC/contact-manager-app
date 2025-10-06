@@ -11,9 +11,7 @@ export default withAuth(
             signIn: '/login',
         },
         callbacks: {
-            authorized: ({ token }) => {
-                return !!token;
-            },
+            authorized: ({ token }) => !!token,
         },
     }
 );
