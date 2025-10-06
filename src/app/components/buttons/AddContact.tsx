@@ -55,7 +55,7 @@ export default function AddContact() {
             </div>
 
             {isOpen && (
-                // <!-- Add User Modal -->
+                // <!-- Add Contact Modal -->
                 <div className="fixed inset-0 bg-black/60 top-0 right-0 left-0 z-50 flex justify-center items-center w-full md:inset-0 h-full max-h-full"
                     id="add-user-modal">
                     <div className="relative w-full max-w-2xl px-4 h-full md:h-auto">
