@@ -45,16 +45,39 @@ export async function POST_Contact(formData: FormData) {
 }
 
 // PUT: Actualizar un contacto
-export async function PUT(request: Request, { params }: { params: { id: string } }) {
+export async function PUT_Contact(formData: FormData) {
   try {
-    const data = await request.json();
+    const id = parseInt(formData.get('id') as string);
+    const data = {
+      name: formData.get('name') as string,
+      email: formData.get('email') as string,
+      phone: formData.get('phone') as string,
+    };
+
+    const existingContact = await prisma.contact.findUnique({
+      where: { id },
+    });
+
+    if (!existingContact) return { success: false, error: 'El contacto no existe' }
+
+    const emailExist = await prisma.contact.findFirst({
+      where: {
+        email: data.email,
+        NOT: { id },
+      },
+    });
+
+    if (emailExist) return { success: false, error: 'Ya existe un contacto con este correo' }
+
     const updatedContact = await prisma.contact.update({
-      where: { id: parseInt(params.id) },
+      where: { id },
       data,
     });
-    return NextResponse.json(updatedContact);
+
+    return { success: true, data: updatedContact };
   } catch (error) {
-    return NextResponse.json({ message: 'Error al actualizar' }, { status: 500 });
+    console.error(error);
+    return { success: false, error: 'Error al actualizar contacto' };
   }
 }
 
