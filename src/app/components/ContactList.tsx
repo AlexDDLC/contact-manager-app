@@ -2,11 +2,11 @@ import React from 'react'
 import Image from 'next/image'
 import EditContact from './buttons/EditContact'
 import DeleteContact from './buttons/DeleteContact'
-import { GET } from '../api/contacts/route'
 
 export default async function ContactList() {
-
-    const response = await GET()
+    const response = await fetch('http://localhost:3000/api/contacts', {
+        method: 'GET',
+    })
 
     const contacts = await response.json()
 
