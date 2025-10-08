@@ -1,20 +1,15 @@
 'use client'
 
 import { IActionResponse } from '@/types/IActionResponse';
+import { IContact } from '@/types/IContact';
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { InputMask } from 'primereact/inputmask';
 import { FaUserEdit } from 'react-icons/fa'
 
-interface Contact {
-    id: string;
-    name: string;
-    email: string;
-    phone: string;
-}
 
 interface EditContactProps {
-    contact: Contact;
+    contact: IContact;
     onContactEdit: (response: IActionResponse) => void;
 }
 

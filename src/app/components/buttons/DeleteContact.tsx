@@ -1,18 +1,12 @@
 'use client'
 
 import { IActionResponse } from '@/types/IActionResponse';
+import { IContact } from '@/types/IContact';
 import React, { useState } from 'react'
 import { FaRegTrashCan } from 'react-icons/fa6'
 
-interface Contact {
-    id: string;
-    name: string;
-    email: string;
-    phone: string;
-}
-
 interface DeleteContactProps {
-    contact: Contact;
+    contact: IContact;
     onContactDelete: (request: IActionResponse) => void;
 }
 
