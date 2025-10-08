@@ -4,6 +4,7 @@ import React, { useState } from 'react'
 import { IoMdPersonAdd } from 'react-icons/io'
 import { useForm } from 'react-hook-form'
 import { IActionResponse } from '@/types/IActionResponse';
+import { InputMask } from "primereact/inputmask";
 
 interface AddContactProps {
     onContactAdded: (response: IActionResponse) => void;
@@ -147,9 +148,9 @@ export default function AddContact({ onContactAdded }: AddContactProps) {
                                         <div className="col-span-6 sm:col-span-3">
                                             <label htmlFor="phone"
                                                 className="text-sm font-medium text-gray-900 block mb-2">Teléfono</label>
-                                            <input type="text"
+                                            <InputMask
                                                 className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
-                                                placeholder="809-123-4567"
+                                                placeholder="809-123-4567" mask="(999) 999-9999"
                                                 {...register("phone", {
                                                     required: {
                                                         value: true,
