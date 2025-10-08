@@ -2,14 +2,24 @@
 
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { useRouter } from 'next/navigation';
 import { FaUserEdit } from 'react-icons/fa'
 
-export default function EditContact({ contact }: { contact: any }) {
+interface Contact {
+    id: string;
+    name: string;
+    email: string;
+    phone: string;
+}
+
+interface EditContactProps {
+    contact: Contact;
+    onContactEdit: () => void;
+}
+
+export default function EditContact({ contact, onContactEdit }: EditContactProps) {
     const [isOpen, setIsOpen] = useState(false)
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
-    const router = useRouter()
 
     const { register, handleSubmit, formState: { errors }, reset } = useForm({
         defaultValues: {
@@ -54,7 +64,7 @@ export default function EditContact({ contact }: { contact: any }) {
             if (result.success) {
                 reset()
                 closeModal()
-                router.refresh()
+                onContactEdit()
             } else {
                 setError(result.error as string)
             }
@@ -70,7 +80,7 @@ export default function EditContact({ contact }: { contact: any }) {
             <button
                 type="button"
                 onClick={openModal}
-                className="text-white bg-amber-500 hover:bg-amber-600 focus:ring-4 focus:ring-amber-200 font-medium inline-flex items-center justify-center rounded-lg text-sm px-3 py-2 text-center">
+                className="text-white bg-amber-500 hover:bg-amber-600 focus:ring-4 focus:ring-amber-200 font-medium inline-flex items-center justify-center rounded-lg text-sm px-3 py-2 text-center ml-2 mr-2">
                 <FaUserEdit size={20} className="mr-2" />
                 Editar
             </button>

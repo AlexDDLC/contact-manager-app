@@ -1,13 +1,23 @@
 'use client'
 
 import React, { useState } from 'react'
-import { useRouter } from 'next/navigation'
 import { FaRegTrashCan } from 'react-icons/fa6'
 
-export default function DeleteContact({ contact }: { contact: any }) {
+interface Contact {
+    id: string;
+    name: string;
+    email: string;
+    phone: string;
+}
+
+interface DeleteContactProps {
+    contact: Contact;
+    onContactDelete: () => void;
+}
+
+export default function DeleteContact({ contact, onContactDelete }: DeleteContactProps) {
     const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState('')
-    const router = useRouter()
     const [isOpen, setIsOpen] = useState(false)
     const openModal = () => setIsOpen(true)
     const closeModal = () => setIsOpen(false)
@@ -30,7 +40,7 @@ export default function DeleteContact({ contact }: { contact: any }) {
 
             if (result.success) {
                 closeModal()
-                router.refresh()
+                onContactDelete()
             } else {
                 setError(result.error as string)
             }
@@ -45,7 +55,7 @@ export default function DeleteContact({ contact }: { contact: any }) {
         <>
             <button type="button"
                 onClick={openModal}
-                className="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm inline-flex items-center px-3 py-2 text-center">
+                className="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm inline-flex items-center px-3 py-2 text-center ml-2 mr-2">
                 <div className="mr-2 h-5 w-5">
                     <FaRegTrashCan size={20} />
                 </div>
