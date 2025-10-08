@@ -1,88 +1,216 @@
-import React from 'react'
-import Image from 'next/image'
-import EditContact from './buttons/EditContact'
-import DeleteContact from './buttons/DeleteContact'
+"use client";
 
-export default async function ContactList() {
-    const response = await fetch('http://localhost:3000/api/contacts', {
-        method: 'GET',
-    })
+import React, { useEffect, useState } from 'react';
+import { DataTable, DataTableFilterMeta } from 'primereact/datatable';
+import { Column } from 'primereact/column';
+import { FilterMatchMode, FilterOperator } from 'primereact/api';
+import EditContact from './buttons/EditContact';
+import DeleteContact from './buttons/DeleteContact';
+import { InputText } from 'primereact/inputtext';
+import { Button } from 'primereact/button';
+import { addLocale } from 'primereact/api';
+import AddContact from './buttons/AddContact';
+import { Toolbar } from 'primereact/toolbar';
 
-    const contacts = await response.json()
+addLocale('en', {
+    matchAll: 'Coincidir con todos',
+    matchAny: 'Coincidir con cualquiera',
+    addRule: 'Añadir regla',
+    startsWith: 'Empieza con',
+    contains: 'Contiene',
+    notContains: 'No contiene',
+    endsWith: 'Termina en',
+    equals: 'Igual a',
+    notEquals: 'No es igual a',
+    apply: 'Aplicar',
+    clear: 'Limpiar',
+    removeRule: 'Remover regla'
+})
 
-    return (
-        <div className="flex flex-col">
-            <div className="overflow-x-auto">
-                <div className="align-middle inline-block min-w-full">
-                    <div className="shadow overflow-hidden">
-                        <table className="table-fixed min-w-full divide-y divide-gray-200">
-                            <thead className="bg-gray-100">
-                                <tr>
-                                    <th scope="col"
-                                        className="p-4 text-left text-xs font-medium text-gray-500 uppercase">
-                                        Nombre
-                                    </th>
-                                    <th scope="col"
-                                        className="p-4 text-left text-xs font-medium text-gray-500 uppercase">
-                                        Teléfono
-                                    </th>
-                                    <th scope="col"
-                                        className="p-4 text-left text-xs font-medium text-gray-500 uppercase">
-                                        Creado en
-                                    </th>
-                                    <th scope="col"
-                                        className="p-4 text-left text-xs font-medium text-gray-500 uppercase">
-                                        Correo
-                                    </th>
-                                    <th scope="col"></th>
-                                </tr>
-                            </thead>
-                            <tbody className="bg-white divide-y divide-gray-200">
+interface Contact {
+    id: string;
+    name: string;
+    email: string;
+    phone: string;
+    createdAt: string;
+    updatedAt: string;
+}
 
-                                {contacts && contacts.map((contact: any) => (
-                                    <tr key={contact.id} className="hover:bg-gray-100">
-                                        <td className="p-4 flex items-center whitespace-nowrap space-x-6 mr-12 lg:mr-0">
-                                            <Image className="h-10 w-10 rounded-full" width={20} height={20}
-                                                src="/user.png"
-                                                alt={`${contact.name} avatar`} />
-                                            <div className="text-sm font-normal text-gray-500">
+const defaultFilters: DataTableFilterMeta = {
+    global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    name: {
+        operator: FilterOperator.AND,
+        constraints: [
+            { value: null, matchMode: FilterMatchMode.STARTS_WITH },
+        ],
+    },
+    email: {
+        operator: FilterOperator.AND,
+        constraints: [
+            { value: null, matchMode: FilterMatchMode.STARTS_WITH },
+        ],
+    },
+    phone: {
+        operator: FilterOperator.AND,
+        constraints: [
+            { value: null, matchMode: FilterMatchMode.STARTS_WITH },
+        ],
+    },
+};
 
-                                                <div className="text-base font-semibold text-gray-900">
-                                                    {contact.name}
-                                                </div>
-                                                <div className="text-sm font-normal text-gray-500">
-                                                    Última actualización { }
-                                                    {new Date(contact.updatedAt).toLocaleString('es-DO')}
-                                                </div>
+export default function ContactList() {
+    const [contacts, setContacts] = useState<Contact[]>([]);
+    const [filters, setFilters] = useState<DataTableFilterMeta>(defaultFilters);
+    const [globalFilterValue, setGlobalFilterValue] = useState<string>('');
+    const [loading, setLoading] = useState<boolean>(false);
 
-                                            </div>
-                                        </td>
+    const fetchContacts = async () => {
+        setLoading(true);
+        try {
+            const resp = await fetch('http://localhost:3000/api/contacts', {
+                method: 'GET',
+                cache: 'no-store',
+            });
+            if (!resp.ok) {
+                throw new Error('Error cargando los contactos');
+            }
+            const data: Contact[] = await resp.json();
+            setContacts(data);
+        } catch (err) {
+            console.error('Error al cargar contactos:', err);
+        } finally {
+            setLoading(false);
+        }
+    };
 
-                                        <td className="p-4 whitespace-nowrap text-base font-medium text-gray-900">
-                                            {contact.phone}
-                                        </td>
+    useEffect(() => {
+        fetchContacts();
+    }, []);
 
-                                        <td className="p-4 whitespace-nowrap text-base font-medium text-gray-900">
-                                            {new Date(contact.createdAt).toLocaleString('es-DO')}
-                                        </td>
+    const initFilters = () => {
+        setFilters(
+            {
+                global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+                name: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
+                email: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
+                phone: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
+            });
+        setGlobalFilterValue('');
+    };
 
-                                        <td className="p-4 whitespace-nowrap text-base font-medium text-gray-900">
-                                            {contact.email}
-                                        </td>
+    const onGlobalFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        const newFilters = { ...filters };
+        // @ts-ignore
+        newFilters.global.value = value;
+        setFilters(newFilters);
+        setGlobalFilterValue(value);
+    };
 
-                                        <td className="whitespace-nowrap space-x-2">
-                                            <EditContact contact={contact} />
+    const renderHeader = () => {
+        return (
+            <div className="flex justify-between items-center">
+                <Button
+                    type="button"
+                    icon="pi pi-filter-slash"
+                    label="Limpiar"
+                    outlined
+                    onClick={initFilters}
+                />
+                <span className="p-input-icon-left">
+                    <i className="pi pi-search" />
+                    <InputText
+                        value={globalFilterValue}
+                        onChange={onGlobalFilterChange}
+                        placeholder="Buscar..."
+                        className="p-inputtext p-component"
+                    />
+                </span>
+            </div>
+        );
+    };
 
-                                            <DeleteContact contact={contact} />
-                                        </td>
-                                    </tr>
-                                ))}
-
-                            </tbody>
-                        </table>
+    const nameBodyTemplate = (row: Contact) => {
+        return (
+            <div className="flex items-center space-x-2">
+                <img
+                    src="/user.png"
+                    alt={`${row.name} avatar`}
+                    width={32}
+                    height={32}
+                    className="rounded-full"
+                />
+                <div>
+                    <div className="font-semibold">{row.name}</div>
+                    <div className="text-sm text-gray-500">
+                        Última actualización{' '}
+                        {new Date(row.updatedAt).toLocaleString('es-DO')}
                     </div>
                 </div>
             </div>
+        );
+    };
+
+    const dateBodyTemplate = (row: Contact) => {
+        return new Date(row.createdAt).toLocaleString('es-DO');
+    };
+
+    const actionBodyTemplate = (row: Contact) => {
+        return (
+            <>
+                <EditContact contact={row} onContactEdit={fetchContacts} />
+                <DeleteContact contact={row} onContactDelete={fetchContacts} />
+            </>
+        );
+    };
+
+    const header = renderHeader();
+
+    const rightToolbarTemplate = () => {
+        return <AddContact onContactAdded={fetchContacts} />
+    };
+
+    return (
+        <div className="cardTable">
+            <Toolbar className="mb-4" right={rightToolbarTemplate}></Toolbar>
+
+            <DataTable
+                value={contacts}
+                paginator
+                rows={10}
+                dataKey="id"
+                filters={filters}
+                globalFilterFields={['name', 'email', 'phone']}
+                header={header}
+                loading={loading}
+                emptyMessage="No se encontraron contactos."
+                onFilter={(e) => setFilters(e.filters)}>
+
+                <Column
+                    field="name"
+                    header="Nombre"
+                    body={nameBodyTemplate}
+                    filter
+                    filterPlaceholder="Buscar por nombre"
+                />
+                <Column field="phone"
+                    header="Teléfono"
+                    filter
+                    filterPlaceholder='Buscar por teléfono'
+                />
+                <Column
+                    field="createdAt"
+                    header="Creado en"
+                    body={dateBodyTemplate}
+                />
+                <Column
+                    field="email"
+                    header="Correo"
+                    filter
+                    filterPlaceholder="Buscar por correo"
+                />
+                <Column header="Acciones" body={actionBodyTemplate} />
+            </DataTable>
         </div>
-    )
+    );
 }
