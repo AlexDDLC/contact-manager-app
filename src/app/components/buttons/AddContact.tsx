@@ -3,15 +3,17 @@
 import React, { useState } from 'react'
 import { IoMdPersonAdd } from 'react-icons/io'
 import { useForm } from 'react-hook-form'
-import { useRouter } from 'next/navigation';
 
-export default function AddContact() {
+interface AddContactProps {
+    onContactAdded: () => void;
+}
+
+export default function AddContact({ onContactAdded }: AddContactProps) {
     const [isOpen, setIsOpen] = useState(false)
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
     const openModal = () => setIsOpen(true)
     const closeModal = () => setIsOpen(false)
-    const router = useRouter()
 
     const { register, handleSubmit, formState: { errors }, reset } = useForm();
 
@@ -36,7 +38,7 @@ export default function AddContact() {
             if (result.success) {
                 reset()
                 closeModal()
-                router.refresh()
+                onContactAdded()
             } else {
                 setError(result.error as string)
             }
