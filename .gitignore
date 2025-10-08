@@ -44,5 +44,5 @@ next-env.d.ts
 .vscode
 
 # Prisma folders
-/prisma
+/prisma/migrations
 /src/generated/prisma
