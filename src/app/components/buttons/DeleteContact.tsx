@@ -1,5 +1,6 @@
 'use client'
 
+import { IActionResponse } from '@/types/IActionResponse';
 import React, { useState } from 'react'
 import { FaRegTrashCan } from 'react-icons/fa6'
 
@@ -12,7 +13,7 @@ interface Contact {
 
 interface DeleteContactProps {
     contact: Contact;
-    onContactDelete: () => void;
+    onContactDelete: (request: IActionResponse) => void;
 }
 
 export default function DeleteContact({ contact, onContactDelete }: DeleteContactProps) {
@@ -21,7 +22,11 @@ export default function DeleteContact({ contact, onContactDelete }: DeleteContac
     const [isOpen, setIsOpen] = useState(false)
     const openModal = () => setIsOpen(true)
     const closeModal = () => setIsOpen(false)
-
+    let actionResult: IActionResponse = {
+        success: false,
+        summary: "",
+        detail: ""
+    }
     const handleDelete = async () => {
         setIsLoading(true)
         setError('')
@@ -40,7 +45,14 @@ export default function DeleteContact({ contact, onContactDelete }: DeleteContac
 
             if (result.success) {
                 closeModal()
-                onContactDelete()
+
+                actionResult = {
+                    success: true,
+                    summary: "Buen trabajo!",
+                    detail: "Contacto eliminado correctamente",
+                }
+
+                onContactDelete(actionResult)
             } else {
                 setError(result.error as string)
             }

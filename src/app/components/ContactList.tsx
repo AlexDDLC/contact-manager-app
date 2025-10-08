@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { DataTable, DataTableFilterMeta } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { FilterMatchMode, FilterOperator } from 'primereact/api';
@@ -11,6 +11,8 @@ import { Button } from 'primereact/button';
 import { addLocale } from 'primereact/api';
 import AddContact from './buttons/AddContact';
 import { Toolbar } from 'primereact/toolbar';
+import { Toast } from 'primereact/toast';
+import { IActionResponse } from '@/types/IActionResponse';
 
 addLocale('en', {
     matchAll: 'Coincidir con todos',
@@ -63,6 +65,7 @@ export default function ContactList() {
     const [filters, setFilters] = useState<DataTableFilterMeta>(defaultFilters);
     const [globalFilterValue, setGlobalFilterValue] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(false);
+    const toast = useRef<Toast>(null);
 
     const fetchContacts = async () => {
         setLoading(true);
@@ -80,6 +83,21 @@ export default function ContactList() {
             console.error('Error al cargar contactos:', err);
         } finally {
             setLoading(false);
+        }
+    };
+
+    const onActionComplete = (response: IActionResponse) => {
+        const severity = response.success ? 'success' : 'error';
+
+        toast.current?.show({
+            severity: severity,
+            summary: response.summary,
+            detail: response.detail,
+            life: response.life
+        });
+
+        if (response.success) {
+            fetchContacts();
         }
     };
 
@@ -158,8 +176,8 @@ export default function ContactList() {
     const actionBodyTemplate = (row: Contact) => {
         return (
             <>
-                <EditContact contact={row} onContactEdit={fetchContacts} />
-                <DeleteContact contact={row} onContactDelete={fetchContacts} />
+                <EditContact contact={row} onContactEdit={onActionComplete} />
+                <DeleteContact contact={row} onContactDelete={onActionComplete} />
             </>
         );
     };
@@ -167,11 +185,13 @@ export default function ContactList() {
     const header = renderHeader();
 
     const rightToolbarTemplate = () => {
-        return <AddContact onContactAdded={fetchContacts} />
+        return <AddContact onContactAdded={onActionComplete} />
     };
 
     return (
         <div className="cardTable">
+            <Toast ref={toast} /> 
+
             <Toolbar className="mb-4" right={rightToolbarTemplate}></Toolbar>
 
             <DataTable

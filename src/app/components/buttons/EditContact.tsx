@@ -1,5 +1,6 @@
 'use client'
 
+import { IActionResponse } from '@/types/IActionResponse';
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { FaUserEdit } from 'react-icons/fa'
@@ -13,14 +14,18 @@ interface Contact {
 
 interface EditContactProps {
     contact: Contact;
-    onContactEdit: () => void;
+    onContactEdit: (response: IActionResponse) => void;
 }
 
 export default function EditContact({ contact, onContactEdit }: EditContactProps) {
     const [isOpen, setIsOpen] = useState(false)
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
-
+    let actionResult: IActionResponse = {
+        success: false,
+        summary: "",
+        detail: ""
+    }
     const { register, handleSubmit, formState: { errors }, reset } = useForm({
         defaultValues: {
             name: contact?.name || '',
@@ -64,7 +69,14 @@ export default function EditContact({ contact, onContactEdit }: EditContactProps
             if (result.success) {
                 reset()
                 closeModal()
-                onContactEdit()
+
+                actionResult = {
+                    success: true,
+                    summary: "Buen trabajo!",
+                    detail: "Contacto actualizado correctamente",
+                }
+
+                onContactEdit(actionResult)
             } else {
                 setError(result.error as string)
             }

@@ -3,9 +3,10 @@
 import React, { useState } from 'react'
 import { IoMdPersonAdd } from 'react-icons/io'
 import { useForm } from 'react-hook-form'
+import { IActionResponse } from '@/types/IActionResponse';
 
 interface AddContactProps {
-    onContactAdded: () => void;
+    onContactAdded: (response: IActionResponse) => void;
 }
 
 export default function AddContact({ onContactAdded }: AddContactProps) {
@@ -14,7 +15,11 @@ export default function AddContact({ onContactAdded }: AddContactProps) {
     const [error, setError] = useState('');
     const openModal = () => setIsOpen(true)
     const closeModal = () => setIsOpen(false)
-
+    let actionResponse: IActionResponse = {
+        success: false,
+        summary: "",
+        detail: ""
+    }
     const { register, handleSubmit, formState: { errors }, reset } = useForm();
 
     const onSubmit = handleSubmit(async (data) => {
@@ -33,12 +38,18 @@ export default function AddContact({ onContactAdded }: AddContactProps) {
             })
 
             const result = await response.json()
-            console.log(result)
 
             if (result.success) {
                 reset()
                 closeModal()
-                onContactAdded()
+
+                actionResponse = {
+                    success: true,
+                    summary: "Buen trabajo!",
+                    detail: "Contacto guardado correctamente",
+                }
+
+                onContactAdded(actionResponse)
             } else {
                 setError(result.error as string)
             }
