@@ -2,7 +2,6 @@ export const dynamic = 'force-dynamic';
 
 import React from 'react'
 import Navbar from '../components/Navbar'
-import ContactMenu from '../components/ContactListTop'
 import ContactList from '../components/ContactList';
 
 function Dashboard() {
