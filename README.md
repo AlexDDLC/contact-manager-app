@@ -11,7 +11,7 @@ Incluye autenticación mediante **NextAuth**, manejo de contraseñas con **bcryp
 |------------|-------------|
 | Framework | [Next.js 15](https://nextjs.org/) (con Turbopack) |
 | Lenguaje | [TypeScript](https://www.typescriptlang.org/) |
-| UI | [React 19](https://react.dev/), [PrimeReact](https://primereact.org/), [TailwindCSS 4](https://tailwindcss.com/) |
+| UI | [React 19](https://react.dev/), [PrimeReact](https://primereact.org/), [TailwindCSS 4](https://tailwindcss.com/), [React-Icons](https://react-icons.github.io/react-icons/), [Windster](https://themewagon.com/theme-framework/tailwind-css/)|
 | ORM | [Prisma ORM](https://www.prisma.io/) |
 | Base de Datos | [PostgreSQL 15](https://www.postgresql.org/) |
 | Autenticación | [NextAuth](https://next-auth.js.org/) |
@@ -50,6 +50,7 @@ contact-manager-app/
 
 ### 1️⃣ Requisitos previos
 Asegúrate de tener instalado:
+- [WSL](https://learn.microsoft.com/en-us/windows/wsl/install)
 - [Docker](https://www.docker.com/get-started)
 - [Docker Compose](https://docs.docker.com/compose/install/)
 
@@ -57,9 +58,6 @@ Asegúrate de tener instalado:
 Antes de iniciar los contenedores, crea un archivo `.env` en la raíz con al menos estas variables:
 
 ```env
-POSTGRES_USER=contactUser
-POSTGRES_PASSWORD=contactPassword
-POSTGRES_DB=contacts_db
 DATABASE_URL=postgresql://contactUser:contactPassword@postgres:5432/contacts_db?schema=public
 NEXTAUTH_URL=http://localhost:3000
 NEXTAUTH_SECRET=la_mejor_clave_secreta_del_mundo_mundial_123
