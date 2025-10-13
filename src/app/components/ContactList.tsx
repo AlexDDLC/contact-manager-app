@@ -102,7 +102,10 @@ export default function ContactList() {
     };
 
     useEffect(() => {
-        fetchContacts();
+    setLoading(true);
+    fetchContacts().finally(() => {
+        setTimeout(() => setLoading(false), 100); // pequeño delay
+    });
     }, []);
 
     const initFilters = () => {
