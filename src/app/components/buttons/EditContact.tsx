@@ -31,6 +31,7 @@ export default function EditContact({ contact, onContactEdit }: EditContactProps
       phone: contact?.phone || '',
       company: contact?.company || '',
       address: contact?.address || '',
+      comments: contact?.comments || '',
     }
   })
 
@@ -42,6 +43,7 @@ export default function EditContact({ contact, onContactEdit }: EditContactProps
         phone: contact.phone || '',
         company: contact.company || '',
         address: contact.address || '',
+        comments: contact.comments || '',
       })
     }
   }, [contact, isOpen, reset])
@@ -63,6 +65,8 @@ export default function EditContact({ contact, onContactEdit }: EditContactProps
     formData.append('phone', data.phone)
     formData.append('company', data.company || '')
     formData.append('address', data.address || '')
+    formData.append('comments', data.comments || '')
+
 
     try {
       const response = await fetch('http://localhost:3000/api/contacts', {
@@ -202,6 +206,16 @@ export default function EditContact({ contact, onContactEdit }: EditContactProps
               {...register('address')}
             />
           </div>
+
+          {/* Comments */}
+            <div className="col-span-12 sm:col-span-6">
+              <label className="text-sm font-medium block mb-2">Comentarios</label>
+              <textarea
+              placeholder="Especifique cualquier comentario adicional"
+              className="shadow-sm bg-gray-50 border border-gray-300 rounded-lg block w-full p-2.5"
+              {...register("comments")}
+              />
+            </div>
         </form>
       </Dialog>
     </>

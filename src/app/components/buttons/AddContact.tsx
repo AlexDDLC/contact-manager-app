@@ -171,6 +171,17 @@ export default function AddContact({ onContactAdded }: AddContactProps) {
                                                 {...register("address")}
                                             />
                                         </div>
+
+                                        {/* Comments */}
+                                        <div className="col-span-12 sm:col-span-6">
+                                            <label className="text-sm font-medium block mb-2">Comentarios</label>
+                                            <textarea
+                                                placeholder="Especifique cualquier comentario adicional"
+                                                className="shadow-sm bg-gray-50 border border-gray-300 rounded-lg block w-full p-2.5"
+                                                {...register("comments")}
+                                            />
+                                        </div>
+
                                     </div>
 
                                     {/* Botón guardar */}

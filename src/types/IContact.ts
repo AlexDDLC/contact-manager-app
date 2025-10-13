@@ -5,4 +5,5 @@ export interface IContact {
     phone: string;
     address?: string;
     company?: string;
+    comments?: string;
 }
