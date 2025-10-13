@@ -21,6 +21,9 @@ export async function POST(request: Request) {
       name: formData.get('name') as string,
       email: formData.get('email') as string,
       phone: formData.get('phone') as string,
+      address: formData.get('address') as string,
+      company: formData.get('company') as string,
+      comments: formData.get('comments') as string,
     }
 
     const emailExist = await prisma.contact.findUnique({
@@ -47,6 +50,9 @@ export async function PUT(request: Request) {
       name: formData.get('name') as string,
       email: formData.get('email') as string,
       phone: formData.get('phone') as string,
+      address: formData.get('address') as string,
+      company: formData.get('company') as string,
+      comments: formData.get('comments') as string,
     }
 
     const existing = await prisma.contact.findUnique({ where: { id } })
