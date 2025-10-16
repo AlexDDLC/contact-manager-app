@@ -77,7 +77,7 @@ export default function LoginPage() {
                   {...register("email", {
                     required: {
                       value: true,
-                      message: "El correo es requerido"
+                      message: "El correo es obligatorio"
                     },
                   })}
                 />
