@@ -101,7 +101,7 @@ export default function LoginPage() {
                     {...register("password", {
                       required: {
                         value: true,
-                        message: "La contraseña es requerida"
+                        message: "La contraseña es obligatoria"
                       },
                     })}
                   />
