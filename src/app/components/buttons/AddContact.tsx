@@ -52,7 +52,7 @@ export default function AddContact({ onContactAdded }: AddContactProps) {
                 actionResponse = {
                     success: true,
                     summary: "Buen trabajo!",
-                    detail: "Contacto guardado correctamente",
+                    detail: "Contacto guardado correctamente!",
                 }
 
                 onContactAdded(actionResponse)
